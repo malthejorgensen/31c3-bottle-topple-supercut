@@ -24,6 +24,6 @@ For a full list of options run: `python detector.py --help`
 
 To-do list
 ----------
-☑ Get sound stream from OPUS file
-☐ Detect bottle topple (with random forest?)
-☐ Create supercut from detected bottle topples
+☑ Get sound stream from OPUS file  
+☐ Detect bottle topple (with random forest?)  
+☐ Create supercut from detected bottle topples  
