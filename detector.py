@@ -88,17 +88,14 @@ i = 0
 # j = 0
 
 if args.play:
-    cmd = [
-        # 'f32le': 32-bit float little endian
-        'ffplay', '-f', audio_stream.format.packed.container_name,
-        # '48000': 48000 samples per second (48000 Hz)
-        '-ar', str(audio_stream.rate),
-        '-ac', str(1),
-        '-vn','-',
-    ]
-    ffplay = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-    if args.verbose >= 1:
-        print('Playing audio via the command:', ' '.join(cmd))
+    import pyaudio
+    p = pyaudio.PyAudio()
+    stream = p.open(format=pyaudio.paFloat32,
+                    channels=1,
+                    rate=48000,
+                    output=True)
+    stream.start_stream()
+
 
 for packet in container.demux(audio_stream):
     if i >= sample.shape[0]:
@@ -121,11 +118,7 @@ for packet in container.demux(audio_stream):
             continue
 
         if args.play:
-            try:
-                ffplay.stdin.write(frame.planes[0].to_bytes())
-            except IOError as e:
-                print(e)
-                exit()
+            stream.write(frame.planes[0].to_bytes())
 
         # '<f4': 4-byte floats little endian
         frame_sample = np.fromstring(frame.planes[0].to_bytes(), dtype='<f4')
@@ -174,3 +167,9 @@ if not args.no_analyze:
     ax.set_xlabel('frequency [Hz]')
     ax.set_ylabel('amplitude [?]')
     plt.show()
+
+if args.play:
+    # stop PyAudio output stream and close PyAudio
+    stream.stop_stream()
+    stream.close()
+    p.terminate()

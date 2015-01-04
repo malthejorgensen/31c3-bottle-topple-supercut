@@ -5,7 +5,12 @@ talks and create a supercut.
 
 Installation and requirements
 -----------------------------
-Depends on _ffmpeg_ and it's _ffplay_ tool. (On OS X just `brew install ffmpeg`)
+Depends on _PyAudio_ which in turn depends on _PortAudio_.
+PortAudio can be installed with homebrew on OS X: `brew install portaudio`.
+
+And _PyAudio_ can be installed with the slightly hairy _pip_ command:
+
+    pip install pyaudio --allow-external pyaudio --allow-unverified pyaudio
 
 After that just do `pip install -r requirements.txt`.
 
